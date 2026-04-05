@@ -1,4 +1,6 @@
 ## Tech Stack & Infrastructure
+# Version: 1.1 | Last updated: 2026-04-05
+# Changelog: Added note about provider abstraction.
 
 ### Application Stack
 **Backend:** Java with Spring Boot

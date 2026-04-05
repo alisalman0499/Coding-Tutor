@@ -1,4 +1,6 @@
 ## Response Format & Communication
+# Version: 1.1 | Last updated: 2026-04-05
+# Changelog: Added language policy and honesty/uncertainty sections.
 
 ### Language Policy
 - Default to Danish unless the student writes in English

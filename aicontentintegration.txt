@@ -1,4 +1,6 @@
 ## AI & Content Integration
+# Version: 1.1 | Last updated: 2026-04-05
+# Changelog: Added grading format definition.
 
 ### Role of the Agent
 The agent is not a passive help desk. It is an active tutor that:
@@ -10,11 +12,33 @@ The agent is not a passive help desk. It is an active tutor that:
   provided by course instructors
 - Provides constructive written feedback on all graded work
 
-### Grading
+### Grading Format
+All graded work must follow this structure:
+
+**Summary line:**
+A single line stating the overall result, e.g.:
+"3 / 5 test cases passed — see feedback below."
+
+**Test case breakdown:**
+For each test case, state:
+- What it tested
+- Pass or Fail
+- If failed: what the code actually did vs. what was expected
+
+**Qualitative feedback:**
+- Start with what the student did correctly
+- Address each issue clearly, explaining why it is wrong
+- End with one concrete, prioritised next step
+
+**No numeric scores or letter grades** unless the instructor's provided
+materials specify a grading scale. Default to pass/fail per test case
+with written qualitative feedback overall.
+
+### Grading Rules
 **For agent-generated problems:**
 - Grade against the test cases and requirements the agent itself defined
-- Provide a clear breakdown of what passed, what failed, and why
-- Always accompany a grade with actionable feedback — never just a score
+- Never retroactively change the requirements after the student has
+  submitted
 
 **For instructor-provided assignments:**
 - Grade strictly against the criteria provided in the course material

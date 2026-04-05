@@ -1,0 +1,76 @@
+## UI & Visual Design
+
+### Overall Aesthetic
+Professional, modern, and premium. The interface should feel expensive —
+closer to a polished commercial IDE or a high-end developer tool than a
+generic chat application. First impressions should communicate quality
+and seriousness.
+
+### IDE-Inspired Environment
+The layout and interaction patterns should mimic a modern IDE. Reference
+points: VS Code, JetBrains IDEs, GitHub Codespaces.
+
+**Core layout principles:**
+- Dark theme as default — deep backgrounds, not pure black
+  (e.g. #1e1e1e, #252526 range)
+- Clear panel separation — chat, file tree, and any code areas should
+  feel like distinct IDE panels with subtle borders or dividers
+- Monospace font for all code, editor-adjacent elements, and file names
+- A clean sans-serif font for conversational text and UI labels
+- Minimal use of colour — reserve accent colours for syntax highlighting,
+  active states, and critical feedback only
+- No gradients, rounded decorative elements, or anything that reads as
+  consumer or casual
+
+### Typography
+- Code and file content: monospace (e.g. JetBrains Mono, Fira Code,
+  or Cascadia Code) — with ligature support if possible
+- UI and chat text: clean modern sans-serif (e.g. Inter or Geist)
+- Font sizes should follow a strict, minimal scale — avoid visual noise
+  from too many size variations
+
+### Colour Palette
+- Background: dark, muted — similar to VS Code Dark+ or One Dark Pro
+- Text: off-white, never pure white — reduces eye strain
+- Accent: one primary accent colour used sparingly (e.g. a muted blue
+  or teal — avoid bright or saturated colours)
+- Success / pass states: muted green
+- Error / fail states: muted red
+- Warning / uncertain states: muted amber
+- All colours should feel desaturated and professional — never playful
+
+### Layout & Panels
+Structure the interface around familiar IDE conventions:
+
+- **Left panel:** File tree showing the student folder and course
+  materials folder
+- **Main panel:** Chat interface — the primary interaction area
+- **Right panel (optional / collapsible):** Context panel showing
+  currently active file(s), relevant course material, or test case
+  results
+- **Bottom panel:** Status bar showing active LLM provider, model name,
+  and session state — mimicking the VS Code status bar
+
+### Chat Interface Specifics
+- Messages should feel like terminal or editor output — clean, tight,
+  no excessive padding or bubble styling
+- Code blocks in chat must use full syntax highlighting consistent with
+  the active theme
+- Agent messages and student messages should be clearly distinguished
+  but subtly — avoid heavy chat-bubble styling
+- Timestamps and metadata should be visible but de-emphasised
+
+### Micro-interactions & Motion
+- Transitions and animations should be minimal and purposeful — nothing
+  decorative
+- Loading states should mimic IDE behaviour (e.g. a subtle progress
+  indicator in the status bar, not a spinning icon in the centre)
+- Smooth but fast — never sluggish or flashy
+
+### Non-negotiables
+- No rounded, bubbly, or consumer-app aesthetic anywhere in the interface
+- No light mode as default — light mode may be offered as an option later
+- No clipart, illustrations, or decorative iconography — use clean,
+  minimal line icons only (e.g. Lucide or Phosphor icon sets)
+- No marketing-style copy anywhere in the UI — all text should be
+  functional

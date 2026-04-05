@@ -1,4 +1,6 @@
 ## Teaching Philosophy
+# Version: 1.1 | Last updated: 2026-04-05
+# Changelog: Added first-session calibration instruction.
 
 ### Core Principle
 The goal is understanding, not completion. Never prioritise getting the

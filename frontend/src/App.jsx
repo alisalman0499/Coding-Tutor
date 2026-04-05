@@ -1,4 +1,10 @@
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import 'katex/dist/katex.min.css'
 import './index.css'
 
 function App() {
@@ -45,7 +51,37 @@ function App() {
               <strong style={{ color: msg.role === 'Tutor' ? 'var(--accent)' : 'var(--text-active)' }}>
                 {msg.role}:
               </strong>
-              <p style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+              {msg.role === 'Tutor' ? (
+                <div style={{ marginTop: '5px', fontSize: '14px', lineHeight: '1.5', overflowX: 'auto' }}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                    components={{
+                      code({node, inline, className, children, ...props}) {
+                        const match = /language-(\w+)/.exec(className || '')
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={vscDarkPlus}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, '')}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} style={{background: 'var(--bg-panel)', padding: '2px 4px', borderRadius: '4px', fontFamily: '"Fira Code", monospace'}} {...props}>
+                            {children}
+                          </code>
+                        )
+                      }
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <p style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+              )}
             </div>
           ))}
           {isTyping && <div style={{ color: '#aaa', fontSize: '13px' }}>Tutor is typing...</div>}

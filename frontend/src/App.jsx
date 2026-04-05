@@ -5,13 +5,13 @@ function App() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('ai_api_key') || '');
   const [providerType, setProviderType] = useState(localStorage.getItem('ai_provider_type') || 'cloud');
   const [localUrl, setLocalUrl] = useState(localStorage.getItem('ai_local_url') || 'http://localhost:11434');
-  
+
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [chatHistory, setChatHistory] = useState([
     { role: 'Tutor', content: 'Hello! I am your local AI coding tutor. How can I help you today?' }
   ]);
-  
+
   const [showSettings, setShowSettings] = useState(providerType === 'cloud' && !apiKey);
 
   const saveSettings = () => {
@@ -51,8 +51,8 @@ function App() {
           {isTyping && <div style={{ color: '#aaa', fontSize: '13px' }}>Tutor is typing...</div>}
         </div>
         <div style={{ padding: '15px', borderTop: '1px solid var(--border-color)' }}>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder={providerType === 'local' ? 'Ask Qwen...' : 'Type your question...'}
             value={inputMessage}
             onChange={e => setInputMessage(e.target.value)}
@@ -62,7 +62,7 @@ function App() {
                 setChatHistory(prev => [...prev, { role: 'Student', content: newQuery }]);
                 setInputMessage('');
                 setIsTyping(true);
-                
+
                 try {
                   const payload = [...chatHistory, { role: 'Student', content: newQuery }];
                   const res = await fetch('http://localhost:8080/api/chat', {
@@ -79,7 +79,7 @@ function App() {
                 }
               }
             }}
-            style={{ width: '100%', padding: '10px', background: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'white', outline: 'none' }} 
+            style={{ width: '100%', padding: '10px', background: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'white', outline: 'none' }}
           />
         </div>
       </div>
@@ -101,24 +101,24 @@ function App() {
       {/* Settings Modal */}
       {showSettings && (
         <div className="modal-overlay">
-          <div className="settings-modal" style={{width: '450px'}}>
+          <div className="settings-modal" style={{ width: '450px' }}>
             <h2>Provider Settings</h2>
-            
-            <div style={{display: 'flex', gap: '15px', marginBottom: '15px', fontSize: '14px', color: 'var(--text-active)'}}>
-              <label style={{display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}>
-                <input 
-                  type="radio" 
-                  value="cloud" 
-                  checked={providerType === 'cloud'} 
-                  onChange={() => setProviderType('cloud')} 
+
+            <div style={{ display: 'flex', gap: '15px', marginBottom: '15px', fontSize: '14px', color: 'var(--text-active)' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  value="cloud"
+                  checked={providerType === 'cloud'}
+                  onChange={() => setProviderType('cloud')}
                 /> Cloud API (Gemini/Claude)
               </label>
-              <label style={{display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}>
-                <input 
-                  type="radio" 
-                  value="local" 
-                  checked={providerType === 'local'} 
-                  onChange={() => setProviderType('local')} 
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  value="local"
+                  checked={providerType === 'local'}
+                  onChange={() => setProviderType('local')}
                 /> Local LLM (Ollama)
               </label>
             </div>
@@ -126,23 +126,23 @@ function App() {
             {providerType === 'cloud' ? (
               <>
                 <p style={{ fontSize: '12px', marginBottom: '10px', color: '#aaa' }}>Please provide your LLM API Key to use cloud models.</p>
-                <input 
-                  type="password" 
-                  className="input-field" 
-                  placeholder="sk-..." 
-                  value={apiKey} 
-                  onChange={e => setApiKey(e.target.value)} 
+                <input
+                  type="password"
+                  className="input-field"
+                  placeholder="sk-..."
+                  value={apiKey}
+                  onChange={e => setApiKey(e.target.value)}
                 />
               </>
             ) : (
               <>
                 <p style={{ fontSize: '12px', marginBottom: '10px', color: '#aaa' }}>Provide your local LLM endpoint (e.g. Ollama).</p>
-                <input 
-                  type="text" 
-                  className="input-field" 
-                  placeholder="http://localhost:11434" 
-                  value={localUrl} 
-                  onChange={e => setLocalUrl(e.target.value)} 
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="http://localhost:11434"
+                  value={localUrl}
+                  onChange={e => setLocalUrl(e.target.value)}
                 />
               </>
             )}

@@ -1,0 +1,48 @@
+## Tech Stack & Infrastructure
+
+### Application Stack
+**Backend:** Java with Spring Boot
+**Frontend:** JavaScript with React
+
+This stack is intentional — it mirrors the core technologies taught in
+the Datamatiker programme. The application itself serves as a passive
+reference implementation for students who are curious about how a
+real-world system using these technologies is structured.
+
+### LLM Provider
+**No single provider is locked in.** The system is built with a provider
+abstraction layer, meaning the agent behaviour defined in these
+instruction files remains identical regardless of which model is active.
+
+**Primary contenders:**
+- Google Gemini
+- Anthropic Claude
+- Qwen
+
+**Architecture requirement:**
+- Providers must be swappable without changes to core application logic
+- A configuration option should allow switching provider at startup or
+  runtime
+- Responses from all providers must be normalised to the same internal
+  format before being passed to the student-facing interface
+- Where providers differ in capability (e.g. context window size, file
+  reading support), degrade gracefully and log the limitation — do not
+  silently fail
+
+### Data & Privacy
+**Current scope: local only.** No GDPR considerations apply at this stage.
+
+- All data (conversation history, student files, course materials) is
+  stored locally on the student's machine
+- No data is transmitted to external services beyond the LLM API calls
+  required to generate responses
+- LLM API calls will by nature send conversation content to the chosen
+  provider's servers — this is acceptable for now but must be revisited
+  before any deployment beyond local use
+- No user accounts, no cloud storage, no analytics or telemetry
+
+**When web integration is introduced**, GDPR compliance must be
+re-evaluated before launch, particularly regarding:
+- Storage of conversation history on external servers
+- Which LLM providers are GDPR-compliant for EU student data
+- Whether explicit consent mechanisms are required

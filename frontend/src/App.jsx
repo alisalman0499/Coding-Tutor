@@ -34,8 +34,8 @@ function App() {
       </div>
 
       {/* Main Chat Panel */}
-      <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)' }}>
-        <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
+        <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', flexShrink: 0 }}>
           <span style={{ fontSize: '14px', color: 'var(--text-active)' }}>Chat - Tutor Active</span>
           <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>⚙️ Settings</button>
         </div>
@@ -50,7 +50,7 @@ function App() {
           ))}
           {isTyping && <div style={{ color: '#aaa', fontSize: '13px' }}>Tutor is typing...</div>}
         </div>
-        <div style={{ padding: '15px', borderTop: '1px solid var(--border-color)' }}>
+        <div style={{ padding: '15px', borderTop: '1px solid var(--border-color)', flexShrink: 0 }}>
           <input
             type="text"
             placeholder={providerType === 'local' ? 'Ask Qwen...' : 'Type your question...'}

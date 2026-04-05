@@ -1,0 +1,24 @@
+# AI Handoff Summary: Datamatiker AI Coding Tutor
+
+## Project Overview
+This repository contains a local, offline-first AI coding tutor designed specifically for Datamatiker students at a Danish university. The application prioritizes privacy (no cloud telemetry) and uses Socratic pedagogy to guide students rather than giving them absolute answers.
+
+## Architecture & Technology Stack
+- **Frontend**: React (Vite) wrapped in Electron for a native desktop application experience.
+- **Backend (Runtime)**: Java 17+ with Spring Boot (running on port 8080).
+- **Database**: SQLite (`student_profile.db`) via Spring Data JPA for persistent student state (preferred language, current semester, topics, weak areas).
+- **LLM Engine**: Ollama running locally using the `qwen2.5-coder:3b` model to ensure smooth performance on consumer-grade GPUs (e.g., GTX 1080).
+
+## Implemented Features (Current State)
+1. **Desktop Chat UI**: A responsive, Discord/iMessage-style chat interface using `react-markdown` and `rehype-katex` to beautifully render code and mathematics.
+2. **Provider Agnostic Skeleton**: Settings panel allows switching between Cloud APIs (Gemini/Claude) and Local (Ollama), though Ollama is the active target.
+3. **Socratic LLM Injection**: The `ChatController.java` intercepts chat messages and prepends a strict Socratic human persona that enforces guiding the student over dropping solutions, without referring to itself as an AI.
+4. **Interactive Local File Explorer**: 
+   - A Spring Boot REST API (`WorkspaceController.java`) exposes the `/student-workspace` directory.
+   - The React UI recursively renders this structure.
+   - Clicking a file streams its content into the right-side `Execution Context` panel using `react-syntax-highlighter`.
+
+## Required Next Steps
+The user is determining which of the following immediate roadmap goals to tackle next:
+1. **The Code Execution Sandbox**: Hooking up the existing `CodeExecutionService.java` skeleton to Java's `ProcessBuilder`. This will allow the AI tutor (or the student) to reliably compile and test Java snippets locally in the background.
+2. **The RAG Injection Pipeline**: Implementing a vector database or folder retrieval system to parse Datamatiker curriculum materials (assignments, syllabus documents) so the LLM has deep contextual awareness of what the student is currently learning.

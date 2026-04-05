@@ -1,0 +1,59 @@
+# Full Conversation Reconstruction
+Note: An automated system script hasn't compiled the raw system overview log file yet, so this was synthesized by the AI using the memory context of the entire session.
+
+## Initial Setup & Architecture
+**User**: I can open it now. Change the program so that user doesnt start by entering their API key but chooses whether to use a local llm or wants to use an api key
+**AI**: [Created an implementation plan and added the provider-agnostic UI settings to App.jsx]
+
+**User**: Alright now how do i set it up so it can use qwen locally?
+**AI**: [Provided instructions to download Ollama and run `ollama run qwen2.5-coder:3b`]
+
+**User**: sure go ahead
+**AI**: [Began implementing the backend REST controller to talk to port 11434]
+
+**User**: sure go ahead but im running a 1080 not anything heavy so think about that before you throw a qwen model at me.
+**AI**: [Confirmed that `qwen2.5-coder:3b` is optimized for roughly 2GB of VRAM, perfect for a GTX 1080, and finalized the Spring Boot OllamaService.]
+
+## Testing Socratic Mode
+**User**: Student: hello
+Tutor: Connection Error: Is the Spring Boot backend running on port 8080?
+**AI**: [Resolved the CORS error in WebConfig.java so React could talk to Spring Boot]
+
+**User**: [Asked math questions to test the Socratic mode, model successfully generated calculations using the Socratic method]
+
+## UI / Layout Refinements
+**User**: Actually the chat window is bugged. I can't scroll through it. When the conversation gets too long the text goes into nothingness and the chatbox isnt able to be written in anymore
+**AI**: [Fixed flexbox scaling with `flex: 1` and `overflowY: 'auto'` in App.jsx]
+
+**User**: Fix the code markdown now please. for mathematics and code
+**AI**: [Integrated `react-markdown`, `remark-math`, `rehype-katex`, and `react-syntax-highlighter` into the Chat Message rendering]
+
+**User**: make it so the student name and text appears on the right side of conversation. I want some form of bubbles behind the names as well.
+**AI**: [Styled the chat using iOS/Discord-style right/left aligned message bubbles with an accent color]
+
+## The Interactive File System
+**User**: Make the explorer on the left side of the program interactable
+**User**: Sure [approving plan]
+**AI**: [Created the `student-workspace` folder and added `WorkspaceController.java` to traverse files recursively. Built the React FileNode UI to map clicked files to the right-side Execution Context panel]
+
+**User**: What did you do. the entire app is just grey/black now
+**AI**: [Debugged the White Screen of Death caused by hot-reloading React when the Spring Boot server was down, resulting in an array `.map()` error. Added `Array.isArray()` safety wrapper.]
+
+**User**: im getting this text in the chat again "Tutor Connection Error: Is the Spring Boot backend running on port 8080?"
+**AI**: [Realized I had terminated the Java JVM to compile the workspace backend, but forgot to run `mvnw spring-boot:run` to bring it back online. Restarted the server.]
+
+## LLM Alignment Fixes
+**User**: "Student: write some code that makes me look cool..." [Qwen refused the prompt explicitly]
+**AI**: [Adjusted the systemPrompt in ChatController.java to instruct it NEVER to fully refuse requests, but guide users, and to never say 'As an AI language model']
+
+**User**: it gave me the same response again
+**AI**: [Identified 'Context Poisoning' where the LLM's previous refusal was still in React state. Pushed a "Clear Chat" button to wipe the window history]
+
+**User**: [Asked for further restriction of persona dropping and AI terminology]
+**AI**: [Finalized the prompt to strictly enforce a "human computer science tutor at a Datamatiker program" persona.]
+
+**User**: Tutor Connection Error: Is the Spring Boot backend running on port 8080?
+**AI**: [Realized I had forgotten to restart the Maven server *again*. Started it.]
+
+**User**: Go to the conversationhistory folder and create a new folder with a name of your chance and in that folder I need you to create a text file with this entire conversation...
+**AI**: [Created the `session-01-building-the-tutor` folder and dumped `ai_handoff_summary.txt` and `full_conversation.txt`]

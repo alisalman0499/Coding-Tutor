@@ -6,6 +6,12 @@ function App() {
   const [providerType, setProviderType] = useState(localStorage.getItem('ai_provider_type') || 'cloud');
   const [localUrl, setLocalUrl] = useState(localStorage.getItem('ai_local_url') || 'http://localhost:11434');
   
+  const [inputMessage, setInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [chatHistory, setChatHistory] = useState([
+    { role: 'Tutor', content: 'Hello! I am your local AI coding tutor. How can I help you today?' }
+  ]);
+  
   const [showSettings, setShowSettings] = useState(providerType === 'cloud' && !apiKey);
 
   const saveSettings = () => {
@@ -34,15 +40,45 @@ function App() {
           <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>⚙️ Settings</button>
         </div>
         <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <strong style={{ color: 'var(--accent)' }}>Tutor:</strong>
-            <p style={{ marginTop: '5px' }}>Hello! I see you're working on Java inheritance today. What's confusing you?</p>
-          </div>
+          {chatHistory.map((msg, index) => (
+            <div key={index} style={{ marginBottom: '15px' }}>
+              <strong style={{ color: msg.role === 'Tutor' ? 'var(--accent)' : 'var(--text-active)' }}>
+                {msg.role}:
+              </strong>
+              <p style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+            </div>
+          ))}
+          {isTyping && <div style={{ color: '#aaa', fontSize: '13px' }}>Tutor is typing...</div>}
         </div>
         <div style={{ padding: '15px', borderTop: '1px solid var(--border-color)' }}>
           <input 
             type="text" 
-            placeholder="Type your question..." 
+            placeholder={providerType === 'local' ? 'Ask Qwen...' : 'Type your question...'}
+            value={inputMessage}
+            onChange={e => setInputMessage(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === 'Enter' && inputMessage.trim() !== '') {
+                const newQuery = inputMessage.trim();
+                setChatHistory(prev => [...prev, { role: 'Student', content: newQuery }]);
+                setInputMessage('');
+                setIsTyping(true);
+                
+                try {
+                  const payload = [...chatHistory, { role: 'Student', content: newQuery }];
+                  const res = await fetch('http://localhost:8080/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: payload })
+                  });
+                  const data = await res.json();
+                  setChatHistory(prev => [...prev, { role: 'Tutor', content: data.response }]);
+                } catch (err) {
+                  setChatHistory(prev => [...prev, { role: 'Tutor', content: 'Connection Error: Is the Spring Boot backend running on port 8080?' }]);
+                } finally {
+                  setIsTyping(false);
+                }
+              }
+            }}
             style={{ width: '100%', padding: '10px', background: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'white', outline: 'none' }} 
           />
         </div>

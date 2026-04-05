@@ -3,10 +3,15 @@ import './index.css'
 
 function App() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('ai_api_key') || '');
-  const [showSettings, setShowSettings] = useState(!apiKey);
+  const [providerType, setProviderType] = useState(localStorage.getItem('ai_provider_type') || 'cloud');
+  const [localUrl, setLocalUrl] = useState(localStorage.getItem('ai_local_url') || 'http://localhost:11434');
+  
+  const [showSettings, setShowSettings] = useState(providerType === 'cloud' && !apiKey);
 
   const saveSettings = () => {
     localStorage.setItem('ai_api_key', apiKey);
+    localStorage.setItem('ai_provider_type', providerType);
+    localStorage.setItem('ai_local_url', localUrl);
     setShowSettings(false);
   };
 
@@ -54,23 +59,59 @@ function App() {
       {/* Status Bar */}
       <div style={{ gridColumn: '1 / -1', background: 'var(--accent)', color: 'white', fontSize: '12px', display: 'flex', alignItems: 'center', padding: '0 10px' }}>
         <span>✔ SQLite Connected</span>
-        <span style={{ marginLeft: '15px' }}>Model: {apiKey ? 'Gemini/Claude (Ready)' : 'No API Key'}</span>
+        <span style={{ marginLeft: '15px' }}>Model: {providerType === 'cloud' ? (apiKey ? 'Cloud API (Ready)' : 'Cloud API (No Key)') : 'Local LLM (Ready)'}</span>
       </div>
 
       {/* Settings Modal */}
       {showSettings && (
         <div className="modal-overlay">
-          <div className="settings-modal">
+          <div className="settings-modal" style={{width: '450px'}}>
             <h2>Provider Settings</h2>
-            <p style={{ fontSize: '12px', marginBottom: '10px', color: '#aaa' }}>Since this is a local app, please provide your LLM API Key.</p>
-            <input 
-              type="password" 
-              className="input-field" 
-              placeholder="sk-..." 
-              value={apiKey} 
-              onChange={e => setApiKey(e.target.value)} 
-            />
-            <button className="save-btn" onClick={saveSettings}>Save API Key</button>
+            
+            <div style={{display: 'flex', gap: '15px', marginBottom: '15px', fontSize: '14px', color: 'var(--text-active)'}}>
+              <label style={{display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}>
+                <input 
+                  type="radio" 
+                  value="cloud" 
+                  checked={providerType === 'cloud'} 
+                  onChange={() => setProviderType('cloud')} 
+                /> Cloud API (Gemini/Claude)
+              </label>
+              <label style={{display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}>
+                <input 
+                  type="radio" 
+                  value="local" 
+                  checked={providerType === 'local'} 
+                  onChange={() => setProviderType('local')} 
+                /> Local LLM (Ollama)
+              </label>
+            </div>
+
+            {providerType === 'cloud' ? (
+              <>
+                <p style={{ fontSize: '12px', marginBottom: '10px', color: '#aaa' }}>Please provide your LLM API Key to use cloud models.</p>
+                <input 
+                  type="password" 
+                  className="input-field" 
+                  placeholder="sk-..." 
+                  value={apiKey} 
+                  onChange={e => setApiKey(e.target.value)} 
+                />
+              </>
+            ) : (
+              <>
+                <p style={{ fontSize: '12px', marginBottom: '10px', color: '#aaa' }}>Provide your local LLM endpoint (e.g. Ollama).</p>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  placeholder="http://localhost:11434" 
+                  value={localUrl} 
+                  onChange={e => setLocalUrl(e.target.value)} 
+                />
+              </>
+            )}
+
+            <button className="save-btn" onClick={saveSettings}>Save Settings</button>
           </div>
         </div>
       )}

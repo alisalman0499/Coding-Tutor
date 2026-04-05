@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
@@ -7,7 +7,68 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import 'katex/dist/katex.min.css'
 import './index.css'
 
+const FileNode = ({ node, level, onSelectFile }) => {
+  const [expanded, setExpanded] = useState(false);
+  
+  if (node.isDir) {
+    return (
+      <div style={{ marginLeft: `${level * 10}px` }}>
+        <div style={{ cursor: 'pointer', color: expanded ? 'var(--accent)' : 'var(--text-active)', padding: '3px 0', userSelect: 'none' }} onClick={() => setExpanded(!expanded)}>
+          {expanded ? '📂' : '📁'} {node.name}
+        </div>
+        {expanded && node.children && node.children.map((child, i) => (
+          <FileNode key={i} node={child} level={level + 1} onSelectFile={onSelectFile} />
+        ))}
+      </div>
+    );
+  } else {
+    return (
+      <div style={{ marginLeft: `${level * 10}px`, cursor: 'pointer', padding: '3px 0', userSelect: 'none', color: '#aaa' }} onClick={() => onSelectFile(node.path, node.name)} onMouseEnter={(e) => e.target.style.color = 'white'} onMouseLeave={(e) => e.target.style.color = '#aaa'}>
+        📄 {node.name}
+      </div>
+    );
+  }
+}
+
 function App() {
+  const [fileTree, setFileTree] = useState([]);
+  const [selectedFileContent, setSelectedFileContent] = useState('');
+  const [selectedFileName, setSelectedFileName] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/workspace/tree')
+      .then(res => {
+        if (!res.ok) throw new Error("Server returned " + res.status);
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setFileTree(data);
+        } else {
+          console.error("Expected array, got:", data);
+        }
+      })
+      .catch(err => {
+         console.error("Workspace API error:", err);
+         setFileTree([]);
+      });
+  }, []);
+
+  const handleSelectFile = async (path, name) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/workspace/file?path=${encodeURIComponent(path)}`);
+      if (res.ok) {
+        const text = await res.text();
+        setSelectedFileContent(text);
+        setSelectedFileName(name);
+      } else {
+        setSelectedFileContent('Failed to open file: Access Denied or Not Found.');
+        setSelectedFileName('Error');
+      }
+    } catch(e) {
+      console.error("Failed to fetch file:", e);
+    }
+  }
   const [apiKey, setApiKey] = useState(localStorage.getItem('ai_api_key') || '');
   const [providerType, setProviderType] = useState(localStorage.getItem('ai_provider_type') || 'cloud');
   const [localUrl, setLocalUrl] = useState(localStorage.getItem('ai_local_url') || 'http://localhost:11434');
@@ -30,20 +91,28 @@ function App() {
   return (
     <div className="ide-layout">
       {/* Sidebar Panel */}
-      <div style={{ background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-color)', padding: '10px' }}>
-        <h3 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#888' }}>Explorer</h3>
-        <ul style={{ listStyle: 'none', marginTop: '10px', fontSize: '13px' }} className="code-font">
-          <li style={{ color: 'var(--text-active)' }}>📁 student-workspace</li>
-          <li style={{ marginLeft: '15px' }}>📄 Main.java</li>
-          <li style={{ marginLeft: '15px' }}>📄 Assignment.pdf</li>
-        </ul>
+      <div style={{ background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-color)', padding: '10px', overflowY: 'auto' }}>
+        <h3 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#888', marginBottom: '10px' }}>Explorer</h3>
+        <div style={{ fontSize: '13px' }} className="code-font">
+          <div style={{ color: 'var(--text-active)', fontWeight: 'bold', marginBottom: '5px' }}>📦 student-workspace</div>
+          {Array.isArray(fileTree) && fileTree.map((node, i) => (
+             <FileNode key={i} node={node} level={1} onSelectFile={handleSelectFile} />
+          ))}
+        </div>
       </div>
 
       {/* Main Chat Panel */}
       <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
         <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', flexShrink: 0 }}>
           <span style={{ fontSize: '14px', color: 'var(--text-active)' }}>Chat - Tutor Active</span>
-          <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>⚙️ Settings</button>
+          <div>
+            <button 
+              onClick={() => setChatHistory([{ role: 'Tutor', content: 'Hello! I am your local AI coding tutor. How can I help you today?' }])} 
+              style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginRight: '15px' }}>
+              🧹 Clear Chat
+            </button>
+            <button onClick={() => setShowSettings(true)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>⚙️ Settings</button>
+          </div>
         </div>
         <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
           {chatHistory.map((msg, index) => (
@@ -131,12 +200,23 @@ function App() {
         </div>
       </div>
 
-      {/* Context/Test Cases Panel */}
-      <div style={{ background: 'var(--bg-panel)', borderLeft: '1px solid var(--border-color)', padding: '10px' }}>
-        <h3 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#888' }}>Execution Context</h3>
-        <div style={{ marginTop: '10px', fontSize: '13px', color: '#aaa' }}>
-          No code tests running...
-        </div>
+      {/* Right Sidebar - Execution Context */}
+      <div style={{ background: 'var(--bg-panel)', borderLeft: '1px solid var(--border-color)', padding: '10px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <h3 style={{ fontSize: '12px', textTransform: 'uppercase', color: '#888' }}>
+          {selectedFileName ? `Viewing File: ${selectedFileName}` : 'Execution Context'}
+        </h3>
+        {selectedFileName ? (
+           <div style={{ flex: 1, marginTop: '10px', background: '#1e1e1e', overflowY: 'auto', padding: '15px', borderRadius: '4px', border: '1px solid #333' }}>
+              <pre style={{ margin: 0, fontSize: '13px', fontFamily: '"Fira Code", monospace', color: '#d4d4d4', whiteSpace: 'pre-wrap' }}>
+                {selectedFileContent}
+              </pre>
+           </div>
+        ) : (
+          <div style={{ marginTop: '20px', textAlign: 'center', color: '#555', fontSize: '13px' }}>
+            <p>Select a file in the explorer</p>
+            <p>or run code to see output.</p>
+          </div>
+        )}
       </div>
 
       {/* Status Bar */}

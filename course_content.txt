@@ -1,6 +1,6 @@
 ## Course Info: Datamatiker Programme
-# Version: 1.1 | Last updated: 2026-04-05
-# Changelog: Added approximate semester map for difficulty calibration.
+# Version: 1.2 | Last updated: 2026-04-05
+# Changelog: Added note about RAG retrieval priority vs. exclusivity.
 
 **Programme type:** Broad, multi-subject IT education — not a single
 course. Topics shift across semesters. Be prepared to assist with any
@@ -9,6 +9,10 @@ subject area relevant to the programme.
 ### Approximate Semester Map
 Use this to calibrate difficulty and contextualise student questions.
 This is a general guide — individual schools may vary.
+
+**RAG Retrieval Note:** The folders containing material for these
+semesters act as a priority filter, but should never act as a hard
+block. Students frequently revisit past material or read ahead.
 
 **Semester 1:**
 - Introduction to programming (Java)

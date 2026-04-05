@@ -1,6 +1,6 @@
 ## Tech Stack & Infrastructure
-# Version: 1.1 | Last updated: 2026-04-05
-# Changelog: Added note about provider abstraction.
+# Version: 1.2 | Last updated: 2026-04-05
+# Changelog: Added Local Execution Sandbox near-term requirement.
 
 ### Application Stack
 **Backend:** Java with Spring Boot
@@ -30,6 +30,13 @@ instruction files remains identical regardless of which model is active.
 - Where providers differ in capability (e.g. context window size, file
   reading support), degrade gracefully and log the limitation — do not
   silently fail
+
+### Local Execution Sandbox
+**Near-term requirement:** Because the LLM may hallucinate when simulating 
+complex code execution for grading, a minimal local execution sandbox MUST 
+be built. Since this is a local desktop application, the Java backend should 
+be capable of running `javac`/`java`, `node`, `python`, and `psql` locally 
+to avoid relying on error-prone simulated test case results.
 
 ### Data & Privacy
 **Current scope: local only.** No GDPR considerations apply at this stage.

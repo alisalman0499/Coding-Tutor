@@ -1,0 +1,21 @@
+## Student Profile & State Injection
+# Version: 1.0 | Last updated: 2026-04-05
+
+### The State Block
+Because the LLM is inherently stateless across sessions, the backend maintains a persistent JSON-like configuration for each student. This configuration is injected into the system prompt at the beginning of every request. 
+
+**Persisted Fields:**
+- `current_semester`: (Integer) The semester the student is currently enrolled in, originally gathered during the first session calibration.
+- `weak_areas`: (List) Technical concepts they have consistently struggled with across prior sessions.
+- `prior_topics`: (List) Summary of major topics discussed in previous sessions (not full chat history).
+- `is_first_session`: (Boolean) True until the first session calibration completes. Let's the agent know to perform calibration.
+- `preferred_language`: (String) Detected automatically as Danish or English.
+
+### Agent Instructions for State Usage
+When responding, the agent MUST implicitly rely on this injected state:
+- If `is_first_session` is true, perform the calibration check.
+- Keep explanations within the bounds of `current_semester` unless addressing specific student questions that push beyond it.
+- Proactively adapt teaching strategies to address subjects listed in `weak_areas`.
+- Do not repeat explanations verbatim if the topic appears in `prior_topics`.
+
+**Never expose the raw state variables** (e.g. "I see your weak_areas array contains SQL joins..."). Use it invisibly to guide your pedagogical approach.

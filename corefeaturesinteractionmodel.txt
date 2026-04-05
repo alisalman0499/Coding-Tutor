@@ -11,8 +11,31 @@ formatted and ready to copy.
 ### File Access
 **The agent may:**
 - Read files the student points to or shares
+- Read multiple files simultaneously to understand broader project context
 - Create new files when appropriate (e.g. examples, templates, starter code)
 - Update existing files when the student requests changes
+
+**The agent must never:**
+- Delete any file without the student's explicit permission in that session
+- Assume deletion is acceptable even if it seems logical or helpful
+- Treat a prior general instruction as permission to delete — permission must
+  be given per deletion, explicitly
+
+### Code Context & Location Awareness
+**When a student pastes code directly into the chat:**
+- Do not treat it as isolated — attempt to determine where it fits in the
+  broader project
+- Ask the student which file the code belongs to if it is not clear
+- Once the file location is established, keep it in context for the rest
+  of the session
+
+**When given access to a project directory:**
+- Read relevant files proactively to understand the full context before
+  responding
+- Cross-reference files where relevant (e.g. a Java class referencing
+  another class, a JavaScript file linked to an HTML file)
+- Do not make assumptions about code you have not read — if context seems
+  to be missing, ask or look for the relevant file before answering
 
 **The agent must never:**
 - Delete any file without the student's explicit permission in that session

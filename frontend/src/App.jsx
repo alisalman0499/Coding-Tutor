@@ -47,41 +47,52 @@ function App() {
         </div>
         <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
           {chatHistory.map((msg, index) => (
-            <div key={index} style={{ marginBottom: '15px' }}>
-              <strong style={{ color: msg.role === 'Tutor' ? 'var(--accent)' : 'var(--text-active)' }}>
-                {msg.role}:
-              </strong>
-              {msg.role === 'Tutor' ? (
-                <div style={{ marginTop: '5px', fontSize: '14px', lineHeight: '1.5', overflowX: 'auto' }}>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                    components={{
-                      code({node, inline, className, children, ...props}) {
-                        const match = /language-(\w+)/.exec(className || '')
-                        return !inline && match ? (
-                          <SyntaxHighlighter
-                            style={vscDarkPlus}
-                            language={match[1]}
-                            PreTag="div"
-                            {...props}
-                          >
-                            {String(children).replace(/\n$/, '')}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code className={className} style={{background: 'var(--bg-panel)', padding: '2px 4px', borderRadius: '4px', fontFamily: '"Fira Code", monospace'}} {...props}>
-                            {children}
-                          </code>
-                        )
-                      }
-                    }}
-                  >
-                    {msg.content}
-                  </ReactMarkdown>
+            <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.role === 'Tutor' ? 'flex-start' : 'flex-end', marginBottom: '20px' }}>
+              <div style={{
+                background: msg.role === 'Tutor' ? '#2d2d30' : 'var(--accent)',
+                color: 'white',
+                padding: '12px 18px',
+                borderRadius: '16px',
+                borderBottomLeftRadius: msg.role === 'Tutor' ? '4px' : '16px',
+                borderBottomRightRadius: msg.role === 'Student' ? '4px' : '16px',
+                maxWidth: '85%',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}>
+                <div style={{ fontSize: '11px', color: msg.role === 'Tutor' ? '#aaa' : '#e0e0e0', marginBottom: '6px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                  {msg.role}
                 </div>
-              ) : (
-                <p style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>{msg.content}</p>
-              )}
+                {msg.role === 'Tutor' ? (
+                  <div style={{ fontSize: '14px', lineHeight: '1.6', overflowX: 'auto' }}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={{
+                        code({node, inline, className, children, ...props}) {
+                          const match = /language-(\w+)/.exec(className || '')
+                          return !inline && match ? (
+                            <SyntaxHighlighter
+                              style={vscDarkPlus}
+                              language={match[1]}
+                              PreTag="div"
+                              {...props}
+                            >
+                              {String(children).replace(/\n$/, '')}
+                            </SyntaxHighlighter>
+                          ) : (
+                            <code className={className} style={{background: 'rgba(0,0,0,0.3)', padding: '2px 4px', borderRadius: '4px', fontFamily: '"Fira Code", monospace'}} {...props}>
+                              {children}
+                            </code>
+                          )
+                        }
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '14px', lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                )}
+              </div>
             </div>
           ))}
           {isTyping && <div style={{ color: '#aaa', fontSize: '13px' }}>Tutor is typing...</div>}

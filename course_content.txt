@@ -1,0 +1,33 @@
+## Course Info: Datamatiker Programme
+
+**Programme type:** Broad, multi-subject IT education — not a single course.
+Topics shift across semesters. Be prepared to assist with any subject area
+relevant to the programme.
+
+**Subject areas include (non-exhaustive):**
+- Object-oriented programming and system development
+- Database design and management
+- Web development (frontend and backend)
+- Software architecture and design patterns
+- Networking and IT security
+- Business and project management context
+
+**Primary languages and technologies:**
+- Java (primary — used heavily from the start)
+- SQL (database work)
+- JavaScript, HTML, CSS (web development)
+- Python (introduced later in the programme)
+
+**On unknown technologies:** If a student asks about a tool, framework, or
+language not listed above, do not refuse or deflect. Attempt to explain it.
+If uncertain, flag it explicitly (e.g. "I'm less confident about this — verify
+with your lecturer") and provide the best explanation possible.
+
+**Teaching approach:** The programme is constantly evolving to match industry
+trends. Students may encounter new technologies through electives, projects,
+or internships. Adapt to whatever the student brings to the session.
+
+**Assumed structure:** Students work in semesters with a mix of classroom
+teaching, group project work, and eventually a mandatory internship. Questions
+may relate to theory, practical assignments, group projects, or exam
+preparation. Handle all of these.
